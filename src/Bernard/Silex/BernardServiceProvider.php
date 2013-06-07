@@ -44,6 +44,10 @@ class BernardServiceProvider implements \Silex\ServiceProviderInterface
             return $app['predis'];
         });
 
+        $app['bernard.logger'] = $app->share(function ($app) {
+            return isset($app['logger']) ? $app['logger'] : null;
+        });
+
         $app['bernard.connection'] = $app->share(function ($app) {
             return new PredisDriver($app['bernard.predis']);
         });
@@ -61,7 +65,7 @@ class BernardServiceProvider implements \Silex\ServiceProviderInterface
         });
 
         $app['bernard.producer'] = $app->share(function ($app) {
-            return new Producer($app['bernard.queue_factory']);
+            return new Producer($app['bernard.queue_factory'], $app['bernard.logger']);
         });
 
         $app['bernard.service_resolver'] = $app->share(function ($app) {
