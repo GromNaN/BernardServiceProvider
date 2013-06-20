@@ -10,6 +10,7 @@ use Bernard\QueueFactory\InMemoryFactory;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer\JMSSerializer;
 use Bernard\Pimple\PimpleAwareResolver;
+use Bernard\Symfony\Command\ConsumeCommand;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
 
@@ -75,6 +76,10 @@ class BernardServiceProvider implements \Silex\ServiceProviderInterface
 
             return $app['bernard.queue_factory.real'];
         };
+
+        $app['bernard.consume_command'] = function ($app) {
+            return new ConsumeCommand($app['bernard.service_resolver'], $app['bernard.queue_factory']);
+        }
     }
 
     /**
